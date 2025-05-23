@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Emotion Detector by Swayam</title>
-    <style>
-        body { text-align: center; font-family: Arial; background: #f0f0f0; }
-        h1 { color: #333; margin-top: 30px; }
-        img { border: 2px solid #333; margin-top: 20px; }
-    </style>
+    <meta charset="UTF-8">
+    <title>Emotion Detection</title>
 </head>
 <body>
-    <h1>Emotion Detector by Swayam</h1>
-    <img src="{{ url_for('video') }}" width="640" height="480">
+    <h1>Emotion Detection from Your Camera</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                document.getElementById('video').srcObject = stream;
+            })
+            .catch(function (error) {
+                alert("Camera access denied or not available.");
+            });
+    </script>
 </body>
 </html>
