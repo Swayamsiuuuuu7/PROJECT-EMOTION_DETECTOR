@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 import base64
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 model = load_model("emotion_model.keras")
 class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -72,7 +72,7 @@ def predict():
     data = request.get_json()
     image_data = data['image'].split(',')[1]
     image = Image.open(BytesIO(base64.b64decode(image_data)))
-    image = image.convert('L')  # Convert to grayscale
+    image = image.convert('L')
     image = image.resize((640, 480))
     image_np = np.array(image)
 
