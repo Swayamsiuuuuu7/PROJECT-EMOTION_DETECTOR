@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response
 import cv2
 import numpy as np
-import time
+import os
 from tensorflow.keras.models import load_model
 from threading import Thread
 
@@ -66,6 +66,7 @@ def video():
 
 if __name__ == '__main__':
     try:
-        app.run()
+        port = int(os.environ.get('PORT', 5000))
+        app.run(host='0.0.0.0', port=port)
     finally:
         camera.release()
