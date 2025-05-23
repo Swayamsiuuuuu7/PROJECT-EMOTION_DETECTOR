@@ -1,15 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Emotion Detector by Swayam</title>
-    <style>
-        body { text-align: center; font-family: Arial; background: #f0f0f0; }
-        h1 { color: #333; margin-top: 30px; }
-        img { border: 2px solid #333; margin-top: 20px; }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Emotion Detection</title>
+  <style>
+    #videoElement {
+      width: 640px;
+      height: 480px;
+      background-color: #666;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Emotion Detector by Swayam</h1>
-    <img src="{{ url_for('video') }}" width="640" height="480">
+  <h1>Real-time Emotion Detection</h1>
+  <div id="container">
+    <video autoplay="true" id="videoElement"></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+  </div>
+
+  <script>
+    const video = document.getElementById('videoElement');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let frameCount = 0;
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        video.srcObject = stream;
+      })
+      .catch(function(err) {
+        alert("Error accessing webcam: " + err);
+      });
+
+    function sendFrame() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      frameCount++;
+      if (frameCount % 30 !== 0) return;
+
+      let image_data = canvas.toDataURL('image/jpeg');
+      fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: image_data })
+      })
+      .then(response => response.json())
+      .then(data => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        data.forEach(face => {
+          const [x, y, w, h] = face.box;
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, w, h);
+          ctx.fillStyle = 'white';
+          ctx.font = '18px Arial';
+          ctx.fillText(`${face.emotion} (${(face.probability*100).toFixed(1)}%)`, x, y > 20 ? y - 5 : y + 15);
+        });
+      })
+      .catch(console.error);
+    }
+
+    function renderLoop() {
+      sendFrame();
+      requestAnimationFrame(renderLoop);
+    }
+
+    requestAnimationFrame(renderLoop);
+  </script>
 </body>
 </html>
