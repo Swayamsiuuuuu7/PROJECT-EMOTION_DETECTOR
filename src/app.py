@@ -1,9 +1,12 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, jsonify
 import cv2
 import numpy as np
 import os
 from tensorflow.keras.models import load_model
 from threading import Thread
+from PIL import Image
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
 model = load_model("emotion_model.keras")
@@ -63,6 +66,36 @@ def index():
 @app.route('/video')
 def video():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
+    image_data = data['image'].split(',')[1]
+    image = Image.open(BytesIO(base64.b64decode(image_data)))
+    image = image.convert('L')  # Convert to grayscale
+    image = image.resize((640, 480))
+    image_np = np.array(image)
+
+    faces = face_cascade.detectMultiScale(image_np, 1.1, 6)
+    results = []
+
+    for (x, y, w, h) in faces:
+        roi_gray = image_np[y:y+h, x:x+w]
+        roi_gray = cv2.resize(roi_gray, (48, 48))
+        roi = roi_gray.astype("float") / 255.0
+        roi = np.expand_dims(roi, axis=0)
+        roi = np.expand_dims(roi, axis=-1)
+        preds = model.predict(roi)[0]
+        max_prob = np.max(preds)
+        if max_prob > 0.5:
+            label = class_labels[np.argmax(preds)]
+            results.append({
+                'box': [int(x), int(y), int(w), int(h)],
+                'emotion': label,
+                'probability': float(max_prob)
+            })
+
+    return jsonify(results)
 
 if __name__ == '__main__':
     try:
