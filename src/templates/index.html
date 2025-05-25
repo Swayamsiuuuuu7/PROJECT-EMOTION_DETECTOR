@@ -2,9 +2,46 @@
 <html>
 <head><title>Emotion Detection</title></head>
 <body>
+  <h1>Emotion Detection from Webcam</h1>
   <video autoplay playsinline width="640" height="480"></video>
+  <p id="emotion-result">Detecting emotion...</p>
+
   <script>
-    // Paste the JS webcam capture & sending code here
+    const video = document.querySelector('video');
+    const emotionResult = document.getElementById('emotion-result');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        video.play();
+      }).catch(err => {
+        emotionResult.textContent = 'Error accessing webcam: ' + err;
+      });
+
+    setInterval(() => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+
+      canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('frame', blob, 'frame.jpg');
+
+        fetch('/predict_emotion', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          emotionResult.textContent = 'Emotion: ' + data.emotion;
+        })
+        .catch(() => {
+          emotionResult.textContent = 'Error detecting emotion';
+        });
+      }, 'image/jpeg');
+    }, 2000);
   </script>
 </body>
 </html>
