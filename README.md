@@ -1,17 +1,111 @@
-# PROJECT-EMOTION_DETECTOR
-# Live Emotion Detection with Flask
+# 🎭 Emotion Detection Web App
 
-This project is a live webcam-based emotion detection web app built with Flask and TensorFlow. It detects facial emotions in real-time using a pre-trained CNN model.
-
----
-
-## Features
-
-- Real-time webcam video stream with face detection.
-- Emotion recognition for 7 classes: Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral.
-- Simple web interface using Flask and OpenCV.
-- Ready to deploy on local machine or cloud platforms (e.g., Render).
+A simple real-time Emotion Detection System built using Flask, OpenCV, and TensorFlow/Keras.  
+This application detects human emotions from facial expressions using a trained deep learning model.
 
 ---
 
-## Project Structure
+## 🚀 Features
+
+- 📷 Detect emotions from uploaded images (camera frames)
+- 🧠 Deep learning model for facial emotion recognition
+- ⚡ Fast and lightweight Flask backend
+- 🎯 Detects 7 emotions:
+  - Angry
+  - Disgust
+  - Fear
+  - Happy
+  - Sad
+  - Surprise
+  - Neutral
+
+---
+
+## 🛠️ Tech Stack
+
+- Python
+- Flask
+- OpenCV
+- TensorFlow / Keras
+- NumPy
+- PIL (Pillow)
+
+---
+
+## 📁 Project Structure
+
+project/ │ ├── app.py ├── emotion_model.keras ├── templates/ │   └── index.html
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the repository
+bash git clone <your-repo-link> cd project 
+
+### 2️⃣ Install dependencies
+bash pip install -r requirements.txt 
+
+### 3️⃣ Run the application
+bash python app.py 
+
+### 4️⃣ Open in browser
+http://localhost:10000
+
+---
+
+## 📸 How It Works
+
+1. User uploads an image/frame  
+2. Image is converted to grayscale  
+3. Face is detected using Haar Cascade  
+4. Face is resized to 48x48  
+5. Model predicts emotion  
+6. Result is returned as JSON  
+
+---
+
+## 🔌 API Endpoint
+
+### POST /predict_emotion
+
+Input:
+- Image file (frame)
+
+Output:
+json {   "emotion": "Happy" } 
+
+---
+
+## ⚠️ Notes
+
+- Only detects the first face in the image
+- Returns "No face detected" if no face is found
+- Make sure emotion_model.keras is in the same directory
+
+---
+
+## 📌 Future Improvements
+
+- Real-time webcam streaming
+- Multi-face detection
+- Better UI/UX
+- Emotion confidence scores
+- Deploy on cloud
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+- Fork the repo  
+- Create a new branch  
+- Make your changes  
+- Submit a Pull Request  
+
+---
+
+## 📜 License
+
+This project is open-source and available under the MI
