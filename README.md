@@ -5,6 +5,15 @@ This application detects human emotions from facial expressions using a trained 
 
 ---
 
+## 🚀 Quick Start
+
+bash git clone <your-repo-link> cd project pip install -r requirements.txt python app.py 
+
+Open in browser:
+http://localhost:10000
+
+---
+
 ## 🚀 Features
 
 - 📷 Detect emotions from uploaded images (camera frames)
@@ -79,19 +88,19 @@ json {   "emotion": "Happy" }
 
 ## ⚠️ Notes
 
-- Only detects the first face in the image
-- Returns "No face detected" if no face is found
-- Make sure emotion_model.keras is in the same directory
+- Only detects the first face in the image  
+- Returns "No face detected" if no face is found  
+- Make sure emotion_model.keras is in the same directory  
 
 ---
 
 ## 📌 Future Improvements
 
-- Real-time webcam streaming
-- Multi-face detection
-- Better UI/UX
-- Emotion confidence scores
-- Deploy on cloud
+- Real-time webcam streaming  
+- Multi-face detection  
+- Better UI/UX  
+- Emotion confidence scores  
+- Deploy on cloud  
 
 ---
 
@@ -99,13 +108,14 @@ json {   "emotion": "Happy" }
 
 Contributions are welcome!
 
-- Fork the repo  
-- Create a new branch  
-- Make your changes  
-- Submit a Pull Request  
+Steps:
+1. Fork the repository  
+2. Create a new branch  
+3. Make your changes  
+4. Submit a Pull Request  
 
 ---
 
 ## 📜 License
 
-This project is open-source and available under the MI
+This project is licensed under the **MIT
